@@ -1,32 +1,55 @@
-import { Schema, Types, model } from "mongoose";
+import { Types } from "mongoose";
 import { UserRepository } from "../repositories/user.repo";
-import { User } from "../entities/user.entity";
+import { User, UserGoogleLoginForm, UserRegistedForm } from "../entities/user.entity";
 import { UserModel } from "../models/user.model";
+import { LIMIT_DOCUMENT_QUERY } from "../constants";
 
-export class UserServices implements UserRepository {
+class UserServices implements UserRepository {
+	private static instance: UserServices;
+
+	// Singleton: Sử dụng getInstance để đảm bảo chỉ có một instance của lớp này
+	static getInstance(): UserServices {
+		return UserServices.instance || new UserServices();
+	}
+
+	async isExisted(email: string): Promise<boolean> {
+		return (await UserModel.countDocuments({ email })) !== 0;
+	}
+
 	async findAll(): Promise<User[]> {
-		return await UserModel.find({}).lean();
+		return await UserModel.find({}).limit(LIMIT_DOCUMENT_QUERY).lean();
 	}
 
 	async findById(id: Types.ObjectId): Promise<User | null> {
 		return await UserModel.findById(id).lean();
 	}
 
-	async create(user: User): Promise<User> {
-		const newUser = new UserModel(user);
+	async findByEmail(email: string): Promise<User | null> {
+		return await UserModel.findOne({ email }).lean();
+	}
+
+	async findByGoogleId(googleId: string): Promise<User | null> {
+		return await UserModel.findOne({ googleId }).lean();
+	}
+
+	async create(form: UserRegistedForm | UserGoogleLoginForm): Promise<User | null> {
+		const newUser = new UserModel(form);
 		await newUser.save();
-		return newUser as User;
+		return newUser;
 	}
 
-	async update(id: Types.ObjectId, payload: Partial<User>): Promise<User> {
-		return (await UserModel.findByIdAndUpdate(id, payload, {
+	async update(
+		id: Types.ObjectId,
+		payload: Partial<User>
+	): Promise<User | null> {
+		return await UserModel.findByIdAndUpdate(id, payload, {
 			returnOriginal: false,
-		})) as User;
+		});
 	}
 
-	async delete(id: Types.ObjectId): Promise<User> {
-		return (await UserModel.findByIdAndDelete(id)) as User;
+	async delete(id: Types.ObjectId): Promise<User | null> {
+		return await UserModel.findByIdAndDelete(id);
 	}
 }
 
-export default UserServices;
+export default UserServices.getInstance();

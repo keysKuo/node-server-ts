@@ -31,8 +31,8 @@ class ErrorResponse extends Error {
 
 class BadRequestError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.BAD_REQUEST,
-		code = StatusCode.BAD_REQUEST
+		message: string = StatusMessage.BAD_REQUEST,
+		code: number = StatusCode.BAD_REQUEST
 	) {
 		super(message, code);
 	}
@@ -40,8 +40,8 @@ class BadRequestError extends ErrorResponse {
 
 class AuthorizedError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.UNAUTHORIZED,
-		code = StatusCode.UNAUTHORIZED
+		message: string = StatusMessage.UNAUTHORIZED,
+		code: number = StatusCode.UNAUTHORIZED
 	) {
 		super(message, code);
 	}
@@ -49,8 +49,8 @@ class AuthorizedError extends ErrorResponse {
 
 class ForbiddenError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.FORBIDDEN,
-		code = StatusCode.FORBIDDEN
+		message: string = StatusMessage.FORBIDDEN,
+		code: number = StatusCode.FORBIDDEN
 	) {
 		super(message, code);
 	}
@@ -58,8 +58,8 @@ class ForbiddenError extends ErrorResponse {
 
 class FileNotFoundError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.NOT_FOUND,
-		code = StatusCode.NOT_FOUND
+		message: string = StatusMessage.NOT_FOUND,
+		code: number = StatusCode.NOT_FOUND
 	) {
 		super(message, code);
 	}
@@ -67,8 +67,8 @@ class FileNotFoundError extends ErrorResponse {
 
 class MethodNotAllowedError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.METHOD_NOT_ALLOWED,
-		code = StatusCode.METHOD_NOT_ALLOWED
+		message: string = StatusMessage.METHOD_NOT_ALLOWED,
+		code: number = StatusCode.METHOD_NOT_ALLOWED
 	) {
 		super(message, code);
 	}
@@ -76,23 +76,26 @@ class MethodNotAllowedError extends ErrorResponse {
 
 class RequestTimeoutError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.REQUEST_TIMEOUT,
-		code = StatusCode.REQUEST_TIMEOUT
+		message: string = StatusMessage.REQUEST_TIMEOUT,
+		code: number = StatusCode.REQUEST_TIMEOUT
 	) {
 		super(message, code);
 	}
 }
 
 class ConflictError extends ErrorResponse {
-	constructor(message = StatusMessage.CONFLICT, code = StatusCode.CONFLICT) {
+	constructor(
+		message: string = StatusMessage.CONFLICT,
+		code: number = StatusCode.CONFLICT
+	) {
 		super(message, code);
 	}
 }
 
 class InternalServerError extends ErrorResponse {
 	constructor(
-		message = StatusMessage.INTERNAL_SERVER,
-		code = StatusCode.INTERNAL_SERVER
+		message: string = StatusMessage.INTERNAL_SERVER,
+		code: number = StatusCode.INTERNAL_SERVER
 	) {
 		super(message, code);
 	}

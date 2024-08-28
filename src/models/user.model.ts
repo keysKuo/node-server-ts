@@ -1,14 +1,5 @@
 import { Schema, Types, model } from "mongoose";
-
-interface IUser extends Document {
-	username: string;
-	email: string;
-	password: string;
-	avatar: string;
-	gender: string;
-	level: string;
-	googleId: string;
-}
+import { User } from "../entities/user.entity";
 
 const UserSchema: Schema = new Schema(
 	{
@@ -29,5 +20,5 @@ const UserSchema: Schema = new Schema(
 	}
 );
 
-const UserModel = model<IUser>("User", UserSchema);
-export { UserModel, IUser };
+const UserModel = model<User>("User", UserSchema);
+export { UserModel };
