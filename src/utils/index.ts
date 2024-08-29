@@ -5,11 +5,21 @@ import { Request, Response, NextFunction } from 'express';
 import { JwtPayload } from "jsonwebtoken";
 import { Types } from "mongoose";
 import bcrypt from 'bcrypt';
-
 interface UserPayload extends JwtPayload {
-	userId: Types.ObjectId
+	userId: Types.ObjectId | null
 }
 
+export function omit<T extends object, K extends keyof T>(
+	object: T, 
+	fields: K[]
+  ): Omit<T, K> {
+	// Tạo đối tượng mới từ các cặp key-value mà không chứa các thuộc tính bị omit
+	const result = Object.fromEntries(
+	  Object.entries(object).filter(([key]) => !fields.includes(key as K))
+	) as Omit<T, K>;
+	
+	return result;
+  }
 
 export const catchAsync = (fn: any) => {
 	return (req: Request, res: Response, next: NextFunction) => {
@@ -36,11 +46,13 @@ export const generateTokens = (payload: UserPayload, keys: KeyPair): TokenPair =
 	return { accessToken, refreshToken };
 };
 
-export const verifyTokens = async (token: string, secretKey: string): Promise<any> => {
-	return JWT.verify(token, secretKey, (err, decode) => {
+export const verifyTokens = async (token: string, secretKey: string): Promise<UserPayload | null> => {
+	let payload = null;
+	JWT.verify(token, secretKey, (err, decode) => {
 		if (err) return null;
-		return decode as UserPayload;
+		payload = decode as UserPayload;
 	});
+	return payload;
 };
 
 export const hashedBcrypt = async (str: string): Promise<string> => {

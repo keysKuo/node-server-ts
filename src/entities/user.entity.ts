@@ -23,8 +23,10 @@ export type UserGoogleLoginForm = Omit<User, "password" | "_id"> & {
 	googleId: string;
 };
 
+export type UserWithoutPassword = Omit<User, "password">;
+
 export type UserDataResponse = {
-	user: Omit<User, "password"> | null;
+	user: UserWithoutPassword | null;
 	accessToken?: string;
 	refreshToken?: string;
 };

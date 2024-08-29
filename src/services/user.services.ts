@@ -1,8 +1,13 @@
 import { Types } from "mongoose";
 import { UserRepository } from "../repositories/user.repo";
-import { User, UserGoogleLoginForm, UserRegistedForm } from "../entities/user.entity";
+import {
+	User,
+	UserGoogleLoginForm,
+	UserRegistedForm,
+} from "../entities/user.entity";
 import { UserModel } from "../models/user.model";
 import { LIMIT_DOCUMENT_QUERY } from "../constants";
+import { BadRequestError } from "../middlewares/error.res";
 
 class UserServices implements UserRepository {
 	private static instance: UserServices;
@@ -32,16 +37,15 @@ class UserServices implements UserRepository {
 		return await UserModel.findOne({ googleId }).lean();
 	}
 
-	async create(form: UserRegistedForm | UserGoogleLoginForm): Promise<User | null> {
-		const newUser = new UserModel(form);
-		await newUser.save();
-		return newUser;
+	async create(form: UserRegistedForm | UserGoogleLoginForm): Promise<User> {
+		try {
+			return await UserModel.create(form);
+		} catch (error) {
+			throw new BadRequestError("❌ Invalid Error! ");
+		}
 	}
 
-	async update(
-		id: Types.ObjectId,
-		payload: Partial<User>
-	): Promise<User | null> {
+	async update(id: Types.ObjectId, payload: Partial<User>): Promise<User | null> {
 		return await UserModel.findByIdAndUpdate(id, payload, {
 			returnOriginal: false,
 		});

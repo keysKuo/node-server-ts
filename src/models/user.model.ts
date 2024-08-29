@@ -13,7 +13,7 @@ const UserSchema: Schema = new Schema(
 			enum: ["regular", "premium", "business"],
 			default: "regular",
 		},
-		googleId: { type: String, unique: true },
+		googleId: { type: String },
 	},
 	{
 		timestamps: true,

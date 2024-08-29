@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { UserDataResponse, UserGoogleLoginForm, UserLoginForm, UserRegistedForm } from "../entities/user.entity";
+import { User, UserDataResponse, UserGoogleLoginForm, UserLoginForm, UserRegistedForm, UserWithoutPassword } from "../entities/user.entity";
 import { AuthRepository } from "../repositories/auth.repo";
 import { KeyPair, TokenPair } from "../constants";
 import { generateKeys, generateTokens, hashedBcrypt, matchedBcrypt } from "../utils";
@@ -8,6 +8,7 @@ import keystoreServices from "./keystore.services";
 import userServices from "./user.services";
 import devConfig from "../configs/dev.config";
 import { KeyStore } from "../entities/keystore.entity";
+import _ from "lodash";
 
 class AuthServices implements AuthRepository {
 	private static instance: AuthServices;
@@ -29,7 +30,9 @@ class AuthServices implements AuthRepository {
 		const avatar = `${devConfig.frontendURL}/${form.gender}-avatar${random}.jpg`;
 		const passwordHash = await hashedBcrypt(form.password);
 		const newUser = await userServices.create({...form, avatar, password: passwordHash });
-		return { user: newUser };
+		return { 
+			user: _.pick(newUser, ['_id', 'username', 'email', 'avatar', 'gender', 'level']) 
+		};
 	}
 
 	async signIn(form: UserLoginForm): Promise<UserDataResponse> {
@@ -42,7 +45,11 @@ class AuthServices implements AuthRepository {
 			throw new AuthorizedError(`❌ Authentication Error!`);
 
 		const { accessToken, refreshToken }: TokenPair = await this.refreshToken(existedUser._id);
-		return { user: existedUser, accessToken, refreshToken };
+		return { 
+			user: _.pick(existedUser, ['_id', 'username', 'email', 'avatar', 'gender', 'level']),
+		 	accessToken,
+		  	refreshToken 
+		};
 	}
 
 	async signInWithGoogle(form: UserGoogleLoginForm): Promise<UserDataResponse> {

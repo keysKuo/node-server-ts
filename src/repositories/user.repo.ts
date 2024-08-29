@@ -7,7 +7,7 @@ export interface UserRepository {
 	findById(id: Types.ObjectId): Promise<User | null>;
 	findByEmail(email: string): Promise<User | null>;
 	findByGoogleId(googleId: string): Promise<User | null>;
-	create(form: UserRegistedForm  | UserGoogleLoginForm): Promise<User | null>;
+	create(form: UserRegistedForm  | UserGoogleLoginForm): Promise<User>;
 	update(id: Types.ObjectId, payload: Partial<User>): Promise<User | null>;
 	delete(id: Types.ObjectId): Promise<User | null>;
 }

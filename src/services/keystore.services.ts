@@ -22,7 +22,10 @@ class KeyStoreService implements KeyStoreRepository {
 	}
 
 	async findByUser(userId: Types.ObjectId): Promise<KeyStore | null> {
-		return await KeyStoreModel.findOne({ user: userId }).lean();
+		return await KeyStoreModel
+			.findOne({ user: userId })
+			.populate({ path: 'user', select: '_id username email avatar gender level'})
+			.lean();
 	}
 
 	async refresh(userId: Types.ObjectId, keys: KeyPair, refreshToken: string): Promise<KeyStore> {
