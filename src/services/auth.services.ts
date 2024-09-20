@@ -46,7 +46,7 @@ class AuthServices implements AuthRepository {
 
 		const { accessToken, refreshToken }: TokenPair = await this.refreshToken(existedUser._id);
 		return { 
-			user: _.pick(existedUser, ['_id', 'username', 'email', 'avatar', 'gender', 'level']),
+			user: _.omit(existedUser, 'password'),
 		 	accessToken,
 		  	refreshToken 
 		};

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { UserRepository } from "../repositories/user.repo";
 import {
+	Level,
 	User,
 	UserGoogleLoginForm,
 	UserRegistedForm,
@@ -49,6 +50,12 @@ class UserServices implements UserRepository {
 		return await UserModel.findByIdAndUpdate(id, payload, {
 			returnOriginal: false,
 		});
+	}
+
+	async upgrade(id: Types.ObjectId, level: Level): Promise<User | null> {
+		return await UserModel
+			.findByIdAndUpdate(id, { $set: { level: level } }, { returnOriginal: false })
+			.lean();
 	}
 
 	async delete(id: Types.ObjectId): Promise<User | null> {

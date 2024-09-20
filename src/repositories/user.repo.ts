@@ -1,4 +1,4 @@
-import { User, UserGoogleLoginForm, UserRegistedForm } from "../entities/user.entity";
+import { Level, User, UserGoogleLoginForm, UserRegistedForm } from "../entities/user.entity";
 import { Types } from "mongoose";
 
 export interface UserRepository {
@@ -9,5 +9,6 @@ export interface UserRepository {
 	findByGoogleId(googleId: string): Promise<User | null>;
 	create(form: UserRegistedForm  | UserGoogleLoginForm): Promise<User>;
 	update(id: Types.ObjectId, payload: Partial<User>): Promise<User | null>;
+	upgrade(id: Types.ObjectId, level: Level): Promise<User | null>;
 	delete(id: Types.ObjectId): Promise<User | null>;
 }
